@@ -1,6 +1,7 @@
 /* Homework6Test.java */
 
 import dict.*;
+import list.InvalidNodeException;
 
 /**
  *  Initializes a hash table, then stocks it with random SimpleBoards.
@@ -46,6 +47,7 @@ public class Homework6Test {
    **/
 
   public static void main(String[] args) {
+	 
     int numBoards;
 
     if (args.length == 0) {
@@ -60,6 +62,9 @@ public class Homework6Test {
     // that counts the number of collisions--or better yet, also prints
     // a histograph of the number of entries in each bucket.  Call this method
     // from here.
-  }
+    //test hashTable constructors 
+    System.out.println(table);
+    
 
+  }
 }
