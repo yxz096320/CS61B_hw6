@@ -66,7 +66,17 @@ public class SimpleBoard {
     // Replace the following line with your solution.  Be sure to return false
     //   (rather than throwing a ClassCastException) if "board" is not
     //   a SimpleBoard.
-    return false;
+	  if(! (board instanceof SimpleBoard) ){
+		  return false;
+	  }
+	  for(int i = 0; i < DIMENSION; i++){
+		  for(int j = 0; j < DIMENSION; j++){
+			  if(grid[i][j] != ((SimpleBoard)board).elementAt(i,j)){
+				  return false;
+			  }
+		  }
+	  }
+	  return true;
   }
 
   /**
@@ -76,7 +86,15 @@ public class SimpleBoard {
 
   public int hashCode() {
     // Replace the following line with your solution.
-    return 99;
+	  long sum = 0;
+	  int exp = 1;
+	 for(int i = 0; i < DIMENSION; i++){
+		  for(int j = 0; j < DIMENSION; j++){
+			  sum = (long)(grid[i][j]*Math.pow(3, exp)) + sum;
+			  exp ++;
+		  }
+	 }
+    return (int)sum;
   }
 
 }

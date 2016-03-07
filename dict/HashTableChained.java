@@ -24,8 +24,10 @@ public class HashTableChained implements Dictionary {
    **/
 
   private List[] buckets;
+  private int[] collision;
   private int n;
   private int capacity;
+  private double loadFactor;
   
 
   /** 
@@ -36,11 +38,13 @@ public class HashTableChained implements Dictionary {
 
   public HashTableChained(int sizeEstimate) {
     // Your solution here.
+	  sizeEstimate = (int)(sizeEstimate *1.25);
 	  while(!isPrime(sizeEstimate)){
-		  n++;
+		  sizeEstimate++;
 	  }
 	  capacity = sizeEstimate;
 	  buckets = new List[sizeEstimate];
+	  collision = new int[sizeEstimate];
   }
   
 
@@ -54,7 +58,7 @@ public class HashTableChained implements Dictionary {
 	  if(n % 2 == 0){
 		  return false;
 	  }
-	  for(int i = 2; i < (int)Math.sqrt(n); i += 2){
+	  for(int i = 3; i < (int)Math.sqrt(n); i += 2){
 		  if(n % i == 0){
 			  return false;
 		  }
@@ -72,6 +76,7 @@ public class HashTableChained implements Dictionary {
 	//101 a prime number close to 100
 	  capacity = 101;
 	  buckets = new List[101];
+	  collision = new int[101];
   }
 
   /**
@@ -84,7 +89,8 @@ public class HashTableChained implements Dictionary {
 
   int compFunction(int code) {
     // Replace the following line with your solution.
-    return Math.abs(code % capacity);
+	  
+    return Math.abs((code*127 + 127 )%16908799 % capacity);
   }
 
   /** 
@@ -132,8 +138,12 @@ public class HashTableChained implements Dictionary {
 	  item.value = value;
 	  if(buckets[k] == null){
 		  buckets[k] = new SList(); 
+		  collision[k] = 1;
 	  }
-	  buckets[k].insertBack(item);
+	  else{
+		  buckets[k].insertBack(item);
+		  collision[k]++;  
+	  }
 	  n++;
     return item;
   }
@@ -206,6 +216,7 @@ public class HashTableChained implements Dictionary {
 			  }
 			  node.remove();
 			  n--;
+			  collision[k] --;
 			  return (Entry)node.item();
 		  }
 		  catch(Exception e){
@@ -221,7 +232,28 @@ public class HashTableChained implements Dictionary {
   public void makeEmpty() {
     // Your solution here.
 	  buckets = new List[capacity];
+	  collision = new int[capacity];
 	  n = 0;
   }
-
+  
+  public String toString(){
+	  String histograph = "";
+	  int N = capacity;
+	  int sum = 0;
+	  for (int i = 0; i < collision.length; i++) {
+		histograph = histograph + "[" + collision[i] +"] ";
+		if(collision[i] != 0){
+			sum ++;
+		}
+	  }
+	 
+	  double expected = N - N *Math.pow(1 - (double)1/N,n);
+	  histograph = histograph + 
+			  "\n" + "N: " + buckets.length +
+			  "\n" + "n: " + n +
+			  "\n" + "load factor is: "+ (double)n/N + 
+			  "\n" + "Expected number of collision: " + expected + 
+			  "\n" + "Actual num of collions: " + sum;
+	  return histograph;
+  }
 }
